@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="./chat.js"></script>
+</head>
+<body>
+  <div id="app">
+  <p>
+    <button @click="$gf.toggleLogIn">
+      <!-- If we have a user ID, we're logged in so show "Log Out" -->
+      <!-- Otherwise, show "Log In" -->
+      {{ $gf.me? 'Log Out' : 'Log In' }}
+    </button>
+  </p>
+  
+  <template v-if="$gf.me">
+    <div class="profileUsernameCombo">
+      <!-- <button @click="toggleProfilePic" id="changeProfilePicButton"></button>-->
+      <profile-picture :actor="$gf.me" :editable="true"></profile-picture>
+
+      <a id="usernameText" @click="toggleUsername" href="#">{{myUsername}} </a>
+      <p>
+        <form  v-if="displayUsername" @submit.prevent="setUsername">
+          <input v-model="preferredUsername" placeholder="Choose a username..."/>
+          <input type="submit" value="Set Username"/>
+        </form>
+        {{ usernameResult }}
+      </p>
+  </div>
+
+  
+  <span v-if="recipient">
+    {{ recipientUsername }}
+  </span>
+  <span v-else>
+    Username {{ recipientUsername }} does not exist!
+  </span>
+   
+  <div class="searchBox">
+    <form @submit.prevent="chatWithUser">
+      <label for="recipient">
+      </label>
+      <input class = "searchInput" id="recipient" v-model="recipientUsernameSearch"/>
+      <input class = "searchInput" type="submit"/>
+    </form>
+    <i class="fas fa-search"></i>
+  </div>
+
+      <!-- A form for sending messages -->
+      <form @submit.prevent="sendMessage">
+        <input v-model="messageText" placeholder="Type a message..."/>
+        <input type="file" accept="image/*" @change="onImageAttachment"/>
+        <input type="submit" value="Send"/>
+      </form>
+
+      <button @click="getSummary()">Get Summary</button>
+        <h1>{{summary}}</h1>
+
+      <ul>
+        <!-- List all the messages -->
+        <li v-for="message of messages" :key="message.id">
+
+          <!-- Display and edit form if we're editing a message -->
+          <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
+            <input v-model="editText">
+            <input type="submit" value="Save"/>
+          </form>
+
+          <!-- Otherwise, display a bunch of properties from the message -->
+          <ul v-else>
+            <li>
+              Message: {{ message.content }} 
+            </li>
+            <li>
+              From Name: <name :actor="message.actor"></name>
+            </li>
+            <li>
+              <profile-picture :actor="message.actor"></profile-picture>
+            </li>
+            <li>
+              From Actor ID: {{ message.actor }}
+            </li>
+            <li>
+              From Username: {{ actorsToUsernames[message.actor] }}
+            </li>
+            <template v-if="privateMessaging">
+              <li>
+                To Name: <name :actor="message.bto[0]"></name>
+              </li>
+              <li>
+                To Actor ID: {{ message.bto[0] }}
+              </li>
+              <li>
+                To Username: {{ actorsToUsernames[message.bto[0]] }}
+              </li>
+            </template>
+            <li>
+              Published at Time: {{ message.published }}
+            </li>
+            <li>
+              Last Edited at Time: {{ message.updated }}
+            </li>
+            <li>
+              <!-- This is a unique identifier that can be used to "link" to messages -->
+              ID: {{ message.id }}
+            </li>
+
+            <li v-if="message.attachment && message.attachment.magnet">
+              <magnet-img :src="message.attachment.magnet"></magnet-img>
+            </li>
+
+            <!-- Only add these controls if the message is ours -->
+            <!-- You can't edit or delete other people's messages -->
+            <template v-if="message.actor==$gf.me">
+              <li>
+                <button @click="removeMessage(message)">
+                  Delete Message
+                </button>
+              </li>
+              <li>
+                <button @click="startEditMessage(message)">
+                  Edit Message
+                </button>
+              </li>
+            </template>
+
+            <li>
+              <like :messageid="message.id"></like>
+            </li>
+            <li>
+              <replies :messageid="message.id"></replies>
+            </li>
+            <li>
+              <read-receipts :messageid="message.id"></read-receipts>
+            </li>
+          </ul>
+        </li>
+      </li>
+
+    </template>
+  </div>
+
+  <template id="name">
+    <span v-if="!editing">
+
+      <!-- If we're not editing the name-->
+      <!-- Display the profile's name, if it exists -->
+      <!-- or anonymous if it doesn't -->
+      {{ profile? profile.name : 'Anonymous' }}
+
+      <!-- Also if the name is "editable" add an edit button -->
+      <button v-if="editable" @click="editName">
+        Edit Name
+      </button>
+    </span>
+
+    <!-- If we're in the editing state, create something to edit the name-->
+    <form v-else @submit.prevent="saveName">
+      <input v-model="editText"/>
+      <input type="submit" value="Save Name"/>
+    </form>
+  </template>
+
+  <template id="like">
+    <button @click="toggleLike">
+      {{ myLikes.length? 'Unlike' : 'Like' }}
+    </button>
+    # of likes:  {{ numLikes }}
+  </template>
+
+  <template id="profile-picture">
+    <magnet-img id="profilePic" :src="profile?profile.icon.magnet:anonymous"></magnet-img>
+
+    <form v-if="editable && displayProfilePic" @submit.prevent="savePicture">
+      Choose a profile Picture:
+      <input type="file" accept="image/*" @change="onPicture"/>
+      <input type="submit" value="Save"/>
+    </form>
+  </template>
+
+  <template id="replies">
+    <form @submit.prevent="postReply">
+      <input v-model="content"/>
+      <input type="submit" value="Reply"/>
+    </form>
+    <ul>
+      <li v-for="reply in replies" :key="reply.id">
+        <name :actor="reply.actor"></name>:
+        {{ reply.content }}
+      </li>
+    </ul>
+  </template>
+
+  <template id="read-receipts">
+    Read By:
+    <span v-for="actor in readActors">
+      <name :actor="actor"></name>
+    </span>
+  </template>
+</body>
+</html>
