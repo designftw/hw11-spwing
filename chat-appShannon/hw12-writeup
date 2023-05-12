@@ -21,7 +21,10 @@
         enter a channel of the unread messages you have in that channel. This 
         will use the API infrastructure I built but will require storing 
         and managing unread messages right before you open the channel and they become 
-        read.
+        read. My mockup used iMessage as an example with a banner. I will not be 
+        able to implement the chat app to be exactly like iMessage. I am also producing 
+        one summary rather than multiple summaries that organize multiple conversations
+        in a groupchat due to the limitations of chatGPT3.
     </p>
 
 

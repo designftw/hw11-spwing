@@ -122,7 +122,8 @@
     font-family: Arial, Helvetica, sans-serif;
     padding: 20px;
 }
-.searchBox{
+
+/*.searchBox{
     position: relative;
 }
 
@@ -159,7 +160,7 @@
     z-index: -1;
 }
 
-/* YouTube icon */
+
 #ytb {
   height: 50px;
   width: 50px;
@@ -175,4 +176,4 @@
   border-radius: 50%;
   border-color: #ff1717;
   box-shadow: 0 0 10px #ff4040;
-}
+}*/
