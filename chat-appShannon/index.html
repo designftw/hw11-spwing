@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="module" src="./chat.js"></script>
+</head>
+<body>
+  <div id="app" class="bodywrap">
+  <p>
+    <button @click="$gf.toggleLogIn">
+      <!-- If we have a user ID, we're logged in so show "Log Out" -->
+      <!-- Otherwise, show "Log In" -->
+      {{ $gf.me? 'Log Out' : 'Log In' }}
+    </button>
+  </p>
+  
+  <template v-if="$gf.me">
+    <div class="profileUsernameCombo">
+      <!-- <button @click="toggleProfilePic" id="changeProfilePicButton"></button>-->
+      <div id="links"> 
+        <a id="usernameText" @click="toggleUsername" href="#">
+        <profile-picture :actor="$gf.me" :editable="true"></profile-picture>
+        {{myUsername}} </a>
+      
+        <a id="usernameText" @click="toggleUsername" href="#"></a>
+        <i class="fa fa-arrow-right" id="icon"></i>
+        {{channel}} </a>
+          
+      </div>
+      <p class = "profileUsernameCombo" >
+        <form  @submit.prevent="setUsername" v-if="displayUsername">
+          <input v-model="preferredUsername" placeholder="Choose a username..."/>
+          <input type="submit" value="Set Username"/>
+        </form>
+        <p v-if="displayUsername">Choose a profile Picture:</p>
+        <form v-if="displayUsername" class =  "profilePicOrdering" @submit.prevent="savePicture">
+          <input type="file"  @change="onPicture"/>
+          <input type="submit" value="Save"/>
+        </form>
+      </p>
+  </div>
+
+  <div class="searchTerm" v-if="!privateMessaging" >
+    <label for="channel"></label>    
+    <i class="fa fa-search" id="icon"></i>
+    <input id="channel" class="no-outline" v-model="channel" />
+  </div>
+
+
+  <!-- A form for sending messages -->
+  <form @submit.prevent="sendMessage" class="sendingMessages">
+    <div class="flexRow">
+      <input class="no-outline2" v-model="messageText" placeholder="Type a message..."/>
+      <div class="image-upload">
+        <label for="file-input" class="file-input2" >
+          <i class="fa fa-camera" id="icon"></i>
+          <div v-if="fileExists">{{fileExists.name}}</div>
+        </label>
+        <input id="file-input" type="file" accept="image/*" @change="onImageAttachment"/> 
+        </div> 
+      </div>
+      
+    <input  class="no-outline2" type="submit" value="Send"/>
+  </form>
+  
+
+      <button class="getSummary" @click="getSummary()">
+        {{channelNumOfUnreads}} unread messsages. Get Summary
+      </button>
+      
+        
+        
+        <div v-if="gettingSummary">
+          Loading . . . 
+        </div>
+          <div v-if="summary">
+            {{summary}}
+          </div>
+
+      <ul>
+       
+        <!-- List all the messages -->
+        <li class ="borderList" v-for="message of messages" :key="message.id">
+
+          <!-- Display and edit form if we're editing a message -->
+          <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
+            <input v-model="editText">
+            <input type="submit" value="Save"/>
+          </form>
+
+          <!-- Otherwise, display a bunch of properties from the message -->
+          <div class="messageWrapper" v-else>
+            <div class="messageUserDisplay">
+              <div>
+                <profile-picture  :actor="message.actor"></profile-picture>
+                <div>
+                  @{{actorsToUsernames[message.actor]}}
+                </div>
+              </div>
+              <template v-if="message.actor==$gf.me">
+                <div>
+                  <button @click="removeMessage(message)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </template>
+            </div>
+
+
+            <div>
+              {{ message.content }} 
+            </div>
+
+            <div>
+              {{ message.published }}
+            </div>
+
+            <div v-if="message.attachment && message.attachment.magnet">
+              <magnet-img :src="message.attachment.magnet"></magnet-img>
+            </div>
+
+            
+            <template>
+              <div>
+                <button @click="startEditMessage(message)">
+                  Edit Message
+                </button>
+              </div>
+            </template>
+
+            <div>
+              <like :messageid="message.id"></like>  
+            </div>
+            <div>
+              <replies :messageid="message.id"></replies>
+            </div>
+            <div>
+              <read-receipts :messageid="message.id"></read-receipts>
+            </div>
+          </div>
+          </li>
+        </ul>
+        
+    </template>
+  
+  </div>
+
+  
+  <template id="name">
+    <span v-if="!editing">
+
+      <!-- If we're not editing the name-->
+      <!-- Display the profile's name, if it exists -->
+      <!-- or anonymous if it doesn't -->
+      {{ profile? profile.name : 'Anonymous' }}
+
+      <!-- Also if the name is "editable" add an edit button -->
+      <button v-if="editable" @click="editName">
+        Edit Name
+      </button>
+    </span>
+
+    <!-- If we're in the editing state, create something to edit the name-->
+    <form v-else @submit.prevent="saveName">
+      <input v-model="editText"/>
+      <input type="submit" value="Save Name"/>
+    </form>
+  </template>
+
+  <template id="profile-picture">
+    <magnet-img id="profilePic" :src="profile?profile.icon.magnet:anonymous"></magnet-img>
+  </template>
+
+  <template id="replies">
+    <form @submit.prevent="postReply">
+      <input v-model="content"/>
+      <input type="submit" value="Reply"/>
+    </form>
+    <ol>
+      <li v-for="reply in replies" :key="reply.id">
+        <name :actor="reply.actor"></name>:
+        <hr>  
+        {{ reply.content }}
+      </li>
+    </ol>
+  </template>
+
+  <template id="read-receipts">
+    <span v-for="actor in readActors">
+      <name :actor="actor"></name>
+    </span>
+  </template>
+
+  <template id="like">
+    <button @click="toggleLike">
+      {{ myLikes.length? 'Unlike' : 'Like' }}
+    </button>
+    # of likes:  {{ numLikes }}
+  </template>
+
+  <template>
+    <div v-html="require(`!html-loader!../assets/svg/${icon}.svg`)" class="svg-container"></div>
+</template>
+</body>
+</html>

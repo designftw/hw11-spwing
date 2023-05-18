@@ -1,0 +1,260 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+#m-img{
+    width: 200px;
+    height: 150px;
+}
+
+.button {
+    outline:none;
+    height: 40px;
+    text-align: center;
+    width: 130px;
+    border-radius:40px;
+    background: #fff;
+    border: 2px solid blue;
+    color: blue;
+    letter-spacing:1px;
+    text-shadow:0;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  
+.button:hover {
+    color:white;
+    background: blue;
+}
+
+.button:active {
+    letter-spacing: 2px;
+      letter-spacing: 2px ;
+}
+
+
+
+.custom-radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+  }
+  
+  .custom-radio label {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .custom-radio label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid blue;
+    border-radius: 50%;
+  }
+  
+  .custom-radio label::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    width: 12px;
+    height: 12px;
+    background-color: blue;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .custom-radio input[type="radio"]:checked + label::after {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  .messageClass:hover {
+    background-color: rgb(200, 194, 194)
+  }
+
+  .replyClass {
+    background-color: red
+  }
+
+  .notBlue {
+    color: blue;
+  }
+
+  #changeProfilePicButton {
+    display:block;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    text-align: center;
+  }
+
+  #usernameText {
+    text-decoration:none;
+    align-self: center;
+    padding-top: 10px;
+    color: #ece5e5;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profileUsernameCombo {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+  body{
+    margin: 0; 
+    background: #19161c;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    color: #ece5e5;
+    font-family: 'Open Sans', sans-serif;
+    padding: 20px;
+    
+}
+.bodywrap {
+  width: 400px;
+  background: #19161c;
+}
+
+.borderList {
+  list-style-position:inside;
+  border: 2px solid #a19fa2;
+  border-radius: 25px;
+  width: 100%;
+  margin-bottom: 30px;
+  padding: 10px;
+}
+
+
+ul {
+  list-style-type: none;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+ol {
+  list-style-type: none;
+}
+
+.messageUserDisplay {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.messageWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+
+}
+
+
+.searchTerm {
+  background: #FFF;
+  width: 100%;
+  border: 3px solid #a19fa2;
+  height: 40px;
+  outline: none;
+  border-radius: 5px;
+  color: #a19fa2;
+  display: flex;
+  justify-content:left;
+  flex-direction: row;
+  align-items: center;
+}
+
+.no-outline:focus{
+  color:  #19161c;
+}
+
+#icon {
+  padding: 5px;
+}
+
+.no-outline {
+  border: none;
+  outline: none;
+  color: #a19fa2;
+}
+
+.no-outline2 {
+  border: none;
+  outline: none;
+  background-color: #19161c;
+  color: #fff;
+}
+
+.sendingMessages {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #19161c;
+  width: 100%;
+  border: 3px solid #a19fa2;
+  height: 52px;
+  outline: none;
+  border-radius: 15px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.getSummary {
+  width: 100%;
+  background-color: #fff;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+  height: 40px;
+  color: #a19fa2;
+  align-self: center;
+
+}
+
+.image-upload>input {
+  display: none;
+}
+
+
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-input2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
