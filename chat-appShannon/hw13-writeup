@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<h1>Problem: The goal of this chat app is to summarize large groups of texts when a 
+        user enters a chat app with lots of unread messages.
+    </h1>
+    <p>The solution is a get summary banner that displays the number of 
+        unread messages so that the user can decide if they want to summarize them. With 
+        one button this chat app allows a quick summary of the most recent unread texts 
+        so that the user does not have to continue to scroll. Design implementation and full 
+        functionality ended up being too ambitious with the unread texts, so the current implementation
+        summarizes the 50 most recent messages at the moment. 
+    </p>
+	
+
+
+</body>
+</html>
